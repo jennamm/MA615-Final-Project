@@ -1,4 +1,4 @@
-# MA615-Final-Project
+# MA615 Final Project
 
 ## Background
 
