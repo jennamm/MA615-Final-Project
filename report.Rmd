@@ -2,7 +2,7 @@
 title: "Noise Lab Sources Report"
 author: "Jenna Moscaritolo"
 date: "12/10/2020"
-output: pdf_document
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -11,12 +11,19 @@ library(tidyr)
 library(dplyr)
 library(sf)
 library(tmap)
+library(tmaptools)
+library(ggplot2)
+library(tidyverse)
 ```
 
 
 
+Changing the question:
+- What sources are in each area of Boston?
+- Show the maps separated by decibels/source type.
 
-POSSIBLE CHANGE TO MAIN QUESTION: being able to produce different maps for each source
+
+- shiny app = show each source in separate map
 
 
 
@@ -49,25 +56,355 @@ df_first_word <- separate(measurements, c("Sources"), "Sources")
 df <- df_first_word[!df_first_word$Sources == "other", ]
 
 
-y <- unique(df$Sources)
-```
+u <- unique(df$Sources)
+l <- length(u)
 
-```{r}
-# Initial Boston mapped data
-tmap_mode('view')
-tm_shape(boston_data) +
-  tm_polygons('MedIllnes', palette = "YlGn", title = "Medical Illness") +
-  tm_shape(df) +
-  tm_dots(col = 'Avg', size = 0.02, alpha = 0.5, palette = "Accent", title = 'Average Noise Score') +
-  tm_layout(main.title = 'Boston Vulnerability (Medical Illness) and Average Noise Score')
-```
+# All
+df$fac <- factor(df$Sources, ordered = TRUE, levels = c("quiet", "footsteps", "voices", "neighbor", "restaurant", "hvac", "traffic", "trash", "pickup", "delivery", "dog", "leaf", "car", "music", "trains", "party", "construction", "alarm", "horn", "airplane", "fireworks"))
 
+# Quiet
+df1 <- df[df$Sources == "quiet", ]
+df1$fac <- factor(df1$Sources, ordered = TRUE, levels = "quiet")
+
+# Footsteps
+df2 <- df[df$Sources == "footsteps", ]
+df2$fac <- factor(df2$Sources, ordered = TRUE, levels = "footsteps")
+
+# Voices
+df3 <- df[df$Sources == "voices", ]
+df3$fac <- factor(df3$Sources, ordered = TRUE, levels = "voices")
+
+# Neighbor
+df4 <- df[df$Sources == "neighbor", ]
+df4$fac <- factor(df4$Sources, ordered = TRUE, levels = "neighbor")
+
+# Restaurant
+df5 <- df[df$Sources == "restaurant", ]
+df5$fac <- factor(df5$Sources, ordered = TRUE, levels = "restaurant")
+
+# Hvac
+df6 <- df[df$Sources == "hvac", ]
+df6$fac <- factor(df6$Sources, ordered = TRUE, levels = "hvac")
+
+# Traffic
+df7 <- df[df$Sources == "traffic", ]
+df7$fac <- factor(df7$Sources, ordered = TRUE, levels = "traffic")
+
+# Trash
+df8 <- df[df$Sources == "trash", ]
+df8$fac <- factor(df8$Sources, ordered = TRUE, levels = "trash")
+
+# Pickup
+df9 <- df[df$Sources == "pickup", ]
+df9$fac <- factor(df9$Sources, ordered = TRUE, levels = "pickup")
+
+# Delivery
+df10 <- df[df$Sources == "delivery", ]
+df10$fac <- factor(df10$Sources, ordered = TRUE, levels = "delivery")
+
+# Dog
+df11 <- df[df$Sources == "dog", ]
+df11$fac <- factor(df11$Sources, ordered = TRUE, levels = "dog")
+
+# Leaf Blower
+df12 <- df[df$Sources == "leaf", ]
+df12$fac <- factor(df12$Sources, ordered = TRUE, levels = "leaf")
+
+# Car Music
+df13 <- df[df$Sources == "car", ]
+df13$fac <- factor(df13$Sources, ordered = TRUE, levels = "car")
+
+# Music
+df14 <- df[df$Sources == "music", ]
+df14$fac <- factor(df14$Sources, ordered = TRUE, levels = "music")
+
+# Trains
+df15 <- df[df$Sources == "trains", ]
+df15$fac <- factor(df15$Sources, ordered = TRUE, levels = "trains")
+
+# Party
+df16 <- df[df$Sources == "party", ]
+df16$fac <- factor(df16$Sources, ordered = TRUE, levels = "party")
+
+# Construction
+df17 <- df[df$Sources == "construction", ]
+df17$fac <- factor(df17$Sources, ordered = TRUE, levels = "construction")
+
+# Alarm
+df18 <- df[df$Sources == "alarm", ]
+df18$fac <- factor(df18$Sources, ordered = TRUE, levels = "alarm")
+
+# Horn
+df19 <- df[df$Sources == "horn", ]
+df19$fac <- factor(df19$Sources, ordered = TRUE, levels = "horn")
+
+# Airplane
+df20 <- df[df$Sources == "airplane", ]
+df20$fac <- factor(df20$Sources, ordered = TRUE, levels = "airplane")
+
+# Fireworks
+df21 <- df[df$Sources == "fireworks", ]
+df21$fac <- factor(df21$Sources, ordered = TRUE, levels = "fireworks")
+```
 
 Trying to assign things to 
 
-```{r}
+Map with all of the sources.
 
+```{r}
+map_fac <- tm_shape(boston_data) +
+  tm_polygons('MedIllnes', palette = "YlGn", title = "Medical Illness") +
+  tm_shape(df) +
+  tm_dots(col = 'fac', size = 0.02, alpha = 0.5, palette = "Accent", title = 'Average Noise Score') +
+  tm_layout(main.title = 'Boston Vulnerability (Medical Illness) and Average Noise Score')
+map_fac
 ```
+
+Map with just "quiet".
+
+```{r}
+map1 <- tm_shape(boston_data) +
+  tm_polygons('MedIllnes', palette = "YlGn", title = "Medical Illness") +
+  tm_shape(df1) +
+  tm_dots(col = 'fac', size = 1, alpha = 0.5, palette = "red", title = 'Average Noise Score') +
+  tm_layout(main.title = 'Boston Vulnerability (Medical Illness) and Average Noise Score (Quiet)')
+map1
+```
+
+Map with just "footsteps".
+
+```{r}
+map2 <- tm_shape(boston_data) +
+  tm_polygons('MedIllnes', palette = "YlGn", title = "Medical Illness") +
+  tm_shape(df2) +
+  tm_dots(col = 'fac', size = 1, alpha = 0.5, palette = "red", title = 'Average Noise Score') +
+  tm_layout(main.title = 'Boston Vulnerability (Medical Illness) and Average Noise Score (Footsteps)')
+map2
+```
+
+
+
+
+Map with just "voices".
+
+```{r}
+map3 <- tm_shape(boston_data) +
+  tm_polygons('MedIllnes', palette = "YlGn", title = "Medical Illness") +
+  tm_shape(df3) +
+  tm_dots(col = 'fac', size = 1, alpha = 0.5, palette = "red", title = 'Average Noise Score') +
+  tm_layout(main.title = 'Boston Vulnerability (Medical Illness) and Average Noise Score (Voices)')
+map3
+```
+
+
+
+
+Map with just "neighbor".
+
+```{r}
+map4 <- tm_shape(boston_data) +
+  tm_polygons('MedIllnes', palette = "YlGn", title = "Medical Illness") +
+  tm_shape(df4) +
+  tm_dots(col = 'fac', size = 1, alpha = 0.5, palette = "red", title = 'Average Noise Score') +
+  tm_layout(main.title = 'Boston Vulnerability (Medical Illness) and Average Noise Score (Neighbor)')
+map4
+```
+
+Map with just "restaurant".
+
+```{r}
+map5 <- tm_shape(boston_data) +
+  tm_polygons('MedIllnes', palette = "YlGn", title = "Medical Illness") +
+  tm_shape(df5) +
+  tm_dots(col = 'fac', size = 1, alpha = 0.5, palette = "red", title = 'Average Noise Score') +
+  tm_layout(main.title = 'Boston Vulnerability (Medical Illness) and Average Noise Score (Restaurant)')
+map5
+```
+
+
+Map with just "hvac".
+
+```{r}
+map6 <- tm_shape(boston_data) +
+  tm_polygons('MedIllnes', palette = "YlGn", title = "Medical Illness") +
+  tm_shape(df6) +
+  tm_dots(col = 'fac', size = 1, alpha = 0.5, palette = "red", title = 'Average Noise Score') +
+  tm_layout(main.title = 'Boston Vulnerability (Medical Illness) and Average Noise Score (hvac)')
+map6
+```
+
+Map with just "traffic".
+
+```{r}
+map7 <- tm_shape(boston_data) +
+  tm_polygons('MedIllnes', palette = "YlGn", title = "Medical Illness") +
+  tm_shape(df7) +
+  tm_dots(col = 'fac', size = 1, alpha = 0.5, palette = "red", title = 'Average Noise Score') +
+  tm_layout(main.title = 'Boston Vulnerability (Medical Illness) and Average Noise Score (traffic)')
+map7
+```
+
+
+Map with just "trash".
+
+```{r}
+map8 <- tm_shape(boston_data) +
+  tm_polygons('MedIllnes', palette = "YlGn", title = "Medical Illness") +
+  tm_shape(df8) +
+  tm_dots(col = 'fac', size = 1, alpha = 0.5, palette = "red", title = 'Average Noise Score') +
+  tm_layout(main.title = 'Boston Vulnerability (Medical Illness) and Average Noise Score (trash)')
+map8
+```
+
+
+Map with just "pickup".
+
+```{r}
+map9 <- tm_shape(boston_data) +
+  tm_polygons('MedIllnes', palette = "YlGn", title = "Medical Illness") +
+  tm_shape(df9) +
+  tm_dots(col = 'fac', size = 1, alpha = 0.5, palette = "red", title = 'Average Noise Score') +
+  tm_layout(main.title = 'Boston Vulnerability (Medical Illness) and Average Noise Score (pickup)')
+map9
+```
+
+
+Map with just "delivery".
+
+```{r}
+map10 <- tm_shape(boston_data) +
+  tm_polygons('MedIllnes', palette = "YlGn", title = "Medical Illness") +
+  tm_shape(df10) +
+  tm_dots(col = 'fac', size = 1, alpha = 0.5, palette = "red", title = 'Average Noise Score') +
+  tm_layout(main.title = 'Boston Vulnerability (Medical Illness) and Average Noise Score (delivery)')
+map10
+```
+
+Map with just "dog".
+
+```{r}
+map11 <- tm_shape(boston_data) +
+  tm_polygons('MedIllnes', palette = "YlGn", title = "Medical Illness") +
+  tm_shape(df11) +
+  tm_dots(col = 'fac', size = 1, alpha = 0.5, palette = "red", title = 'Average Noise Score') +
+  tm_layout(main.title = 'Boston Vulnerability (Medical Illness) and Average Noise Score (dog)')
+map11
+```
+
+Map with just "leaf blower".
+
+```{r}
+map12 <- tm_shape(boston_data) +
+  tm_polygons('MedIllnes', palette = "YlGn", title = "Medical Illness") +
+  tm_shape(df12) +
+  tm_dots(col = 'fac', size = 1, alpha = 0.5, palette = "red", title = 'Average Noise Score') +
+  tm_layout(main.title = 'Boston Vulnerability (Medical Illness) and Average Noise Score (leaf blower)')
+map12
+```
+
+Map with just "car music".
+
+```{r}
+map13 <- tm_shape(boston_data) +
+  tm_polygons('MedIllnes', palette = "YlGn", title = "Medical Illness") +
+  tm_shape(df13) +
+  tm_dots(col = 'fac', size = 1, alpha = 0.5, palette = "red", title = 'Average Noise Score') +
+  tm_layout(main.title = 'Boston Vulnerability (Medical Illness) and Average Noise Score (Car Music)')
+map13
+```
+
+Map with just "music".
+
+```{r}
+map14 <- tm_shape(boston_data) +
+  tm_polygons('MedIllnes', palette = "YlGn", title = "Medical Illness") +
+  tm_shape(df14) +
+  tm_dots(col = 'fac', size = 1, alpha = 0.5, palette = "red", title = 'Average Noise Score') +
+  tm_layout(main.title = 'Boston Vulnerability (Medical Illness) and Average Noise Score (Music)')
+map14
+```
+
+
+Map with just "trains".
+
+```{r}
+map15 <- tm_shape(boston_data) +
+  tm_polygons('MedIllnes', palette = "YlGn", title = "Medical Illness") +
+  tm_shape(df15) +
+  tm_dots(col = 'fac', size = 1, alpha = 0.5, palette = "red", title = 'Average Noise Score') +
+  tm_layout(main.title = 'Boston Vulnerability (Medical Illness) and Average Noise Score (Trains)')
+map15
+```
+
+Map with just "party".
+
+```{r}
+map16 <- tm_shape(boston_data) +
+  tm_polygons('MedIllnes', palette = "YlGn", title = "Medical Illness") +
+  tm_shape(df16) +
+  tm_dots(col = 'fac', size = 1, alpha = 0.5, palette = "red", title = 'Average Noise Score') +
+  tm_layout(main.title = 'Boston Vulnerability (Medical Illness) and Average Noise Score (Party)')
+map16
+```
+
+Map with just "construction".
+
+```{r}
+map17 <- tm_shape(boston_data) +
+  tm_polygons('MedIllnes', palette = "YlGn", title = "Medical Illness") +
+  tm_shape(df17) +
+  tm_dots(col = 'fac', size = 1, alpha = 0.5, palette = "red", title = 'Average Noise Score') +
+  tm_layout(main.title = 'Boston Vulnerability (Medical Illness) and Average Noise Score (Construction)')
+map17
+```
+
+Map with just "alarm".
+
+```{r}
+map18 <- tm_shape(boston_data) +
+  tm_polygons('MedIllnes', palette = "YlGn", title = "Medical Illness") +
+  tm_shape(df18) +
+  tm_dots(col = 'fac', size = 1, alpha = 0.5, palette = "red", title = 'Average Noise Score') +
+  tm_layout(main.title = 'Boston Vulnerability (Medical Illness) and Average Noise Score (Alarm)')
+map18
+```
+
+Map with just "horn".
+
+```{r}
+map19 <- tm_shape(boston_data) +
+  tm_polygons('MedIllnes', palette = "YlGn", title = "Medical Illness") +
+  tm_shape(df19) +
+  tm_dots(col = 'fac', size = 1, alpha = 0.5, palette = "red", title = 'Average Noise Score') +
+  tm_layout(main.title = 'Boston Vulnerability (Medical Illness) and Average Noise Score (Horn)')
+map19
+```
+
+Map with just "airplane".
+
+```{r}
+map20 <- tm_shape(boston_data) +
+  tm_polygons('MedIllnes', palette = "YlGn", title = "Medical Illness") +
+  tm_shape(df20) +
+  tm_dots(col = 'fac', size = 1, alpha = 0.5, palette = "red", title = 'Average Noise Score') +
+  tm_layout(main.title = 'Boston Vulnerability (Medical Illness) and Average Noise Score (Airplane)')
+map20
+```
+
+Map with just "fireworks".
+
+```{r}
+map21 <- tm_shape(boston_data) +
+  tm_polygons('MedIllnes', palette = "YlGn", title = "Medical Illness") +
+  tm_shape(df21) +
+  tm_dots(col = 'fac', size = 1, alpha = 0.5, palette = "red", title = 'Average Noise Score') +
+  tm_layout(main.title = 'Boston Vulnerability (Medical Illness) and Average Noise Score (Fireworks)')
+map21
+```
+
+
+
+
 
 
 
@@ -84,52 +421,29 @@ Noise levels are measured in decibels. At first, people think that noise is meas
 
 Options on app:
 
-airplane - 90
-car music
-delivery
-fireworks
-horn
-leaf blower
-neighbor - 70
-pickup
-restaurant - 60
-trains
-voices - 70
-alarm - 
-construction
-dog
-footsteps - 
-hvac - 60
-music - 70
-party - 120
-quiet - 30
-traffic - 60
+fireworks - 140
+airplane - 120
+horn - 110
+alarm - 110
+construction - 110
+party - 110
+trains - 100
+music - 100
+car music - 100
+leaf blower - 90
+dog - 80
+delivery - 80
+pickup - 80
 trash - 80
-other - NA
+traffic - 70
+hvac - 60
+restaurant - 60
+neighbor - 60
+voices - 60
+footsteps - 50
+quiet - 20
 
-
-
-
-
-
-
-
-
-
-```{r}
-#### Random code from online source
-# For shapes that have a border (like 21), you can colour the inside and outside separately. Use the stroke aesthetic to modify the width of the border
-ggplot(mtcars, aes(wt, mpg)) +
-  geom_point(shape = 21, colour = "black", fill = "white", size = 5, stroke = 5)
-
-
-
-# You can create interesting shapes by layering multiple points of
-# different sizes
-p <- ggplot(mtcars, aes(mpg, wt, shape = factor(cyl)))
-p + geom_point(aes(colour = factor(cyl)), size = 4) +
-  geom_point(colour = "grey90", size = 1.5)
-```
+other - NA (took out of data)
 
 
 
@@ -144,7 +458,7 @@ https://www.faa.gov/regulations_policies/policy_guidance/noise/basics/
 
 https://www.chem.purdue.edu/chemsafety/Training/PPETrain/dblevels.htm
 
-
+https://audiology-web.s3.amazonaws.com/migrated/NoiseChart_Poster-%208.5x11.pdf_5399b289427535.32730330.pdf
 
 
 
