@@ -5,8 +5,8 @@ account: jennamm
 server: bu-rstudio-connect.bu.edu
 hostUrl: https://bu-rstudio-connect.bu.edu/__api__
 appId: 47
-bundleId: 107
+bundleId: 112
 url: https://bu-rstudio-connect.bu.edu/content/47/
-when: 1607975044.74123
+when: 1607976936.85838
 asMultiple: FALSE
 asStatic: FALSE

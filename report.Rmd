@@ -59,7 +59,7 @@ df <- df_first_word[!df_first_word$Sources == "other", ]
 
 ### 2.2 Step Two: Research
 
-The next step was to research different decibel numbers for different noise sources, assign a decibel number to each source, and group them by the same decibel level. The sources that I used to learn and decide on decibel levels with are below in the "Bibliography" section. Here is a list of the sources and their assigned decibel levels:
+The next step was to research different decibel numbers for different noise sources, assign a decibel number to each source, and group them by the same decibel level. The sources that I used to learn and decide on decibel levels with are below in the "Bibliography" section. At first, people think that noise is measured by distance but it is, in fact, measured on a logarithmic scale to be able to correspond to the way our ears interpret sound pressures. Here is a list of the sources and their assigned decibel levels:
 
 
 * fireworks - 140 dB
@@ -87,43 +87,33 @@ The next step was to research different decibel numbers for different noise sour
 ```{r}
 # All
 df$fac <- factor(df$Sources, ordered = TRUE, levels = c("quiet", "footsteps", "voices", "neighbor", "restaurant", "hvac", "traffic", "trash", "pickup", "delivery", "dog", "leaf", "car", "music", "trains", "party", "construction", "alarm", "horn", "airplane", "fireworks"))
-
 # 20 dB
 df1 <- df[df$Sources == "quiet", ]
 df1$fac <- factor(df1$Sources, ordered = TRUE, levels = "quiet")
-
 # 50 dB
 df2 <- df[df$Sources == "footsteps", ]
 df2$fac <- factor(df2$Sources, ordered = TRUE, levels = "footsteps")
-
 # 60 dB
 df3 <- df[df$Sources == c("voices", "neighbor", "restaurant", "hvac"), ]
 df3$fac <- factor(df3$Sources, ordered = TRUE, levels = c("voices", "neighbor", "restaurant", "hvac"))
-
 # 70 dB
 df4 <- df[df$Sources == "traffic", ]
 df4$fac <- factor(df4$Sources, ordered = TRUE, levels = "traffic")
-
 # 80 dB
 df5 <- df[df$Sources == c("trash", "pickup", "delivery", "dog"), ]
 df5$fac <- factor(df5$Sources, ordered = TRUE, levels = c("trash", "pickup", "delivery", "dog"))
-
 # 90 dB
 df6 <- df[df$Sources == "leaf", ]
 df6$fac <- factor(df6$Sources, ordered = TRUE, levels = "leaf")
-
 # 100 dB
 df7 <- df[df$Sources == c("car", "music", "trains"), ]
 df7$fac <- factor(df7$Sources, ordered = TRUE, levels = c("car", "music", "trains"))
-
 # 110 dB
 df8 <- df[df$Sources == c("party", "construction", "alarm", "horn"), ]
 df8$fac <- factor(df8$Sources, ordered = TRUE, levels = c("party", "construction", "alarm", "horn"))
-
 # 120 dB
 df9 <- df[df$Sources == "airplane", ]
 df9$fac <- factor(df9$Sources, ordered = TRUE, levels = "airplane")
-
 # 140 dB
 df10 <- df[df$Sources == "fireworks", ]
 df10$fac <- factor(df10$Sources, ordered = TRUE, levels = "fireworks")
@@ -137,7 +127,9 @@ Below are all of the maps that I have produced. There is one map per decibel tha
 
 ### All Map
 
-```{r}
+```{r, message = FALSE}
+# Setting the tmaps to interactive
+tmap_mode('view')
 map_fac <- tm_shape(boston_data) +
   tm_polygons('MedIllnes', palette = "YlGn", title = "Medical Illness") +
   tm_shape(df) +
@@ -145,6 +137,9 @@ map_fac <- tm_shape(boston_data) +
   tm_layout(main.title = 'Boston Vulnerability (Medical Illness) and Average Noise Score (All)')
 map_fac
 ```
+
+This map above shows where every data point of the average noise score is. As shown on the bottom legend on the right, the dots are divided by source and it is depicted by different colors. All of these maps are interactive. It seems that there are large spots that have a lot of noise data entries in the Fenway area and parts in Roxbury. The rest are scattered around the rest of Boston.
+
 
 ### 20 dB Map
 
@@ -157,6 +152,9 @@ map1 <- tm_shape(boston_data) +
 map1
 ```
 
+This is the map for the 20 dB level of this dataset. Here, the only source that is 20 decibels is "quiet". It looks that most of these data points are in the Fenway area. There can be quiet times of the day that people felt that they should record an entry. Every place can usually be quiet at times.
+
+
 ### 50 dB Map
 
 ```{r}
@@ -167,6 +165,9 @@ map2 <- tm_shape(boston_data) +
   tm_layout(main.title = 'Boston Vulnerability (Medical Illness) and Average Noise Score (50 dB)')
 map2
 ```
+
+This is the map for the 50 dB level of this dataset. Here, the only source that is 50 decibels is "footsteps". Most of the data points are located in the Fenway area as well as some in the North End and Charleston. Footsteps are common everywhere, but it seems that people are most irritated by them in that area. There are many businesses there so people might be hearing things like high heels or dress shoes walking around.
+
 
 ### 60 dB Map
 
@@ -179,6 +180,9 @@ map3 <- tm_shape(boston_data) +
 map3
 ```
 
+This is the map for the 600 dB level of this dataset. Here, the sources that are 60 decibels are "voices", "neighbor", "restaurant", and "hvac" (air conditioners). Voices are the most popular in the Fenway and North End areas. It seems that most of the neighbor noise is coming from the Fenway area or south of that. Restaurant noise is seen more in the Fenway area (there is only one data point for "restaurant"). Hvac noise tends to be more in the Fenway and East Boston areas. These sources are common everywhere but mostly in places that are close together and busy with businesses and activities such as sports games (in Fenway specifically being with many Red Sox games).
+
+
 ### 70 dB Map
 
 ```{r}
@@ -189,6 +193,9 @@ map4 <- tm_shape(boston_data) +
   tm_layout(main.title = 'Boston Vulnerability (Medical Illness) and Average Noise Score (70 dB)')
 map4
 ```
+
+This is the map for the 70 dB level of this dataset. Here, the only source that is 70 decibels is "traffic". As anticipated, traffic is everywhere, especially in a busy, thriving city. Fenway, Allston, Charleston, and the Mattapan areas then to have the most "traffic" data points.
+
 
 ### 80 dB Map
 
@@ -201,6 +208,9 @@ map5 <- tm_shape(boston_data) +
 map5
 ```
 
+This is the map for the 80 dB level of this dataset. Here, the sources that are 80 decibels are "trash", "pickup", "delivery", and "dog". Although there are very few data points for each noise at 80 dB, trash and delivery seem to be the only ones in Fenway. Delivery and dog is also in the Roxbury area as well as dog also being in the Nothern Roslindale area. These four sources are very common in all places, not just cities. So, to see that there is not a lot of data points on Boston means that the users might not recognize that it is a noise and would thus neglect to write it down.
+
+
 ### 90 dB Map
 
 ```{r}
@@ -211,6 +221,9 @@ map6 <- tm_shape(boston_data) +
   tm_layout(main.title = 'Boston Vulnerability (Medical Illness) and Average Noise Score (90 dB)')
 map6
 ```
+
+This is the map for the 90 dB level of this dataset. Here, the only source that is 90 decibels is "leaf" (leaf blowers). Leaf blowers tend to be recorded in the Fenway, East Boston, and West Roxbury areas. Here, there were only a few instances of leaf blowers because they are only common around fall time as the leaves are falling.
+
 
 ### 100 dB Map
 
@@ -223,6 +236,9 @@ map7 <- tm_shape(boston_data) +
 map7
 ```
 
+This is the map for the 100 dB level of this dataset. Here, the sources that are 100 decibels are "car" (car music), "music", and "trains". Car noise is throughout Boston but mainly in the Fenway, Jamaica Plain, and Roxbury areas. Music is in the general Fenway and Dorchester areas. Trains are in the Back Bay, Fenway, and Dorchester areas. In a city with lots of drivers and public transportation method, these high numbers are common in any large or busy city.
+
+
 ### 110 dB Map
 
 ```{r}
@@ -233,6 +249,9 @@ map8 <- tm_shape(boston_data) +
   tm_layout(main.title = 'Boston Vulnerability (Medical Illness) and Average Noise Score (110 dB)')
 map8
 ```
+
+This is the map for the 110 dB level of this dataset. Here, the sources that are 110 decibels are "party", "construction", "alarm", and "horn". Most party noises are from Fenway as well as alarms. Construction noise is from the Back Bay and Mission Hill areas as well as Allston. Horns are in Back Bay and Fenway areas. All of these sources that are 110 dB are very common in any city.
+
 
 ### 120 dB Map
 
@@ -245,6 +264,9 @@ map9 <- tm_shape(boston_data) +
 map9
 ```
 
+This is the map for the 120 dB level of this dataset. Here, the only source that is 120 decibels is "airplane". As seen above, airplane noise is very common in all areas except for Allston and West Roxbury which is far from the airport in East Boston. Airplanes have a large decibel which means that they can be heard over long distances. Especially because Boston Logan International Airport is a major airport.
+
+
 ### 140 dB Map
 
 ```{r}
@@ -256,33 +278,14 @@ map10 <- tm_shape(boston_data) +
 map10
 ```
 
+This is the map for the 140 dB level of this dataset. Here, the only source that is 140 decibels is "fireworks". Fireworks tend to be in similar places as the previous map for airplanes. It is very interesting to see that there are many data points for fireworks as Massachusetts has a law that fireworks are illegal other than commercial companies lighting them on event days such as the Fourth of July.
 
 
 
+## 4.0 Bibliography
 
+Fundamentals of Noise and Sound, 13 July 2020, [www.faa.gov/regulations_policies/policy_guidance/noise/basics/](www.faa.gov/regulations_policies/policy_guidance/noise/basics/).
 
+Noise Comparisons, [www.chem.purdue.edu/chemsafety/Training/PPETrain/dblevels.htm](www.chem.purdue.edu/chemsafety/Training/PPETrain/dblevels.htm). 
 
-Research
-
-
-Noise levels are measured in decibels. At first, people think that noise is measured by distance but it is, in fact, measured on a logarithmic scale to be able to correspond to the way our ears interpret sound pressures.
-
-
-
-
-
-
-
-
-
-
-# Bibliography
-
-https://www.faa.gov/regulations_policies/policy_guidance/noise/basics/
-
-https://www.chem.purdue.edu/chemsafety/Training/PPETrain/dblevels.htm
-
-https://audiology-web.s3.amazonaws.com/migrated/NoiseChart_Poster-%208.5x11.pdf_5399b289427535.32730330.pdf
-
-
-
+American Academy of Audiology, [https://audiology-web.s3.amazonaws.com/migrated/NoiseChart_Poster-%208.5x11.pdf_5399b289427535.32730330.pdf](https://audiology-web.s3.amazonaws.com/migrated/NoiseChart_Poster-%208.5x11.pdf_5399b289427535.32730330.pdf).
