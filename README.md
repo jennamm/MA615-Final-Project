@@ -8,8 +8,8 @@ I have been working with a team on a project with the Noise Lab with Erica Walke
 
 As a continuation of this Noise Lab project, I want to answer these two statements:
 
--	Look at the Noise Lab data, specifically the sources column, and research the average distance that sound travels for each item (i.e. fireworks).
--	Produce a map with rings/circles around those points where the noise should end.
+-	Look at the Noise Lab data, specifically the sources column, and assign them to a decibel (dB) level in increments of 10 in the range of 20-140.
+-	Produce a maps with their grouped decibel levels.
 
 
 The purpose of me doing this analysis is for further EDA on the client's research but this could also even help people choose where to live.
